@@ -64,13 +64,6 @@ public class P2_CastellsP {
 
         int[] numLlibresPerCategoria = new int[4];
 
-        //OMPLIM L'ARRAY DE -1
-        for (int i = 0; i < dadesLlibres.length; i++) {
-            for (int j = 0; j < dadesLlibres[i].length; j++) {
-                dadesLlibres[i][j] = -1;
-            }
-        }
-
         int indexLlibreActual = 0; //AQUESTA VARIABLE ENS SERVEIX PER RECORRER ELS ARRAYS DELS LLIBRES
 
         //DEFINIM DIVERSES VARIABLES
@@ -102,6 +95,7 @@ public class P2_CastellsP {
                     intents++;
                     if (intents == INTENTS_MAX) {
                         intentsEsgotats = true;
+
                     }
                 } else {
                     respostaValida = true;
@@ -205,8 +199,8 @@ public class P2_CastellsP {
                     respostaValida = true;
                     dadesLlibres[INDEX_PREU][indexLlibreActual] = preu;
                 }
-
             }
+
             respostaValida = false;
             intents = 0;
 
@@ -229,11 +223,7 @@ public class P2_CastellsP {
             }
             respostaValida = false;
             //si el llibre introduit te un error eliminem les dades introduides d'aquell llibre
-            if (intentsEsgotats) {
-                for (int i = 0; i < dadesLlibres.length; i++) {
-                    dadesLlibres[i][indexLlibreActual] = -1;
-                }
-            } else {
+            if (!intentsEsgotats) {
                 for (int i = 0; i <= indexLlibreActual; i++) {
                     int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
                     int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
@@ -251,7 +241,7 @@ public class P2_CastellsP {
                 indexLlibreActual++;
 
             } else {
-                System.out.println("S'han introduït " + indexLlibreActual + 1 + " registres de llibres");
+                System.out.println("S'han introduït " + (indexLlibreActual + 1) + " registres de llibres");
                 for (int i = 0; i <= indexLlibreActual; i++) {
                     int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
                     int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
@@ -278,15 +268,6 @@ public class P2_CastellsP {
             System.out.println("    Novel·la (2)");
             System.out.println("    Salut i benestar (3)");
             catConsultada = scanner.nextInt();
-            for (int i = 0; i <= indexLlibreActual; i++) {
-                int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
-                int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
-                System.out.println("codi: " + dadesLlibres[INDEX_CODI][i] +
-                        " categoria: " + catSubcat[INDEX_CATEGORIES_TITOLS][categoriaLlibreNum] +
-                        " subcategoria: " + catSubcat[categoriaLlibreNum + 1][subcategoriaLlibreNum] +
-                        " preu " + dadesLlibres[INDEX_PREU][i] +
-                        " unitats: " + dadesLlibres[INDEX_UNITATS][i]);
-            }
 
             for (int k = 0; k <= indexLlibreActual; k++) {
                 for (int l = k + 1; l < indexLlibreActual; l++) {
@@ -315,9 +296,9 @@ public class P2_CastellsP {
             }
 
             for (int i = 0; i < indexLlibreActual; i++) {
+                int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
+                int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
                 if (dadesLlibres[INDEX_CATEGORIA][i] == catConsultada) {
-                    int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
-                    int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
                     System.out.println("codi: " + dadesLlibres[INDEX_CODI][i] +
                             " categoria: " + catSubcat[INDEX_CATEGORIES_TITOLS][categoriaLlibreNum] +
                             " subcategoria: " + catSubcat[categoriaLlibreNum + 1][subcategoriaLlibreNum] +
