@@ -14,46 +14,67 @@ import java.util.Scanner;
 public class P2_CastellsP {
 
     //DECLAREM TOTES LES CONSTANTS DEL CODI
-    private static final String CATEGORIA_0 = "Educació i formació";
-    private static final String CATEGORIA_1 = "Oci i temps lliure";
-    private static final String CATEGORIA_2 = "Novel·la";
-    private static final String CATEGORIA_3 = "Salut i benestar";
+    private static final String[][] catSubcat = {
+            {
+                    "Educació i formació",
+                    "Oci i temps lliure",
+                    "Novel·la",
+                    "Salut i benestar"
+            },
+            {
+                    "Ciència i enginyeria",
+                    "Biografies i memòries",
+                    "Finances"
+            },
+            {
+                    "Guies de viatge",
+                    "Cuina",
+                    "Esports"
+            },
+            {
+                    "Adolescents",
+                    "Ciència ficció i fantasia",
+                    "Comèdia i humor"
+            },
+            {
+                    "Nutrició",
+                    "Medicina General",
+                    "Fisioteràpia"
+            }
+    };
 
-    private static final String SUBCATEGORIA_EDU_0 = "Ciència i enginyeria";
-    private static final String SUBCATEGORIA_EDU_1 = "Biografies i memòries";
-    private static final String SUBCATEGORIA_EDU_2 = "Finances";
+    private static final int INDEX_CODI = 0;
+    private static final int INDEX_CATEGORIA = 1;
+    private static final int INDEX_SUBCATEGORIA = 2;
+    private static final int INDEX_PREU = 3;
+    private static final int INDEX_UNITATS = 4;
 
-    private static final String SUBCATEGORIA_OCI_0 = "Guies de viatge";
-    private static final String SUBCATEGORIA_OCI_1 = "Cuina";
-    private static final String SUBCATEGORIA_OCI_2 = "Esports";
+    private static final int INDEX_CATEGORIES_TITOLS = 0;
 
-    private static final String SUBCATEGORIA_NOVELA_0 = "Adolescents";
-    private static final String SUBCATEGORIA_NOVELA_1 = "Ciència ficció i fantasia";
-    private static final String SUBCATEGORIA_NOVELA_2 = "Comèdia i humor";
-
-    private static final String SUBCATEGORIA_SALUT_0 = "Nutrició";
-    private static final String SUBCATEGORIA_SALUT_1 = "Medicina General";
-    private static final String SUBCATEGORIA_SALUT_2 = "Fisioteràpia";
 
     private static final int INTENTS_MAX = 3;
 
     public static void main(String[] args) {
 
+
         //FEM LA CREACIÓ DEL NOSTRE SCANNER PER LLEGIR DADES
         Scanner scanner = new Scanner(System.in);
 
-        //AQUESTS SON ELS ARRAYS QUE UTILITZAREM PER EMMAGATZEMAR DADES DELS LLIBRES QUE ENREGISTREM
-        int[] diccionariCodis = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-        String[] diccionariCategories = {"", "", "", "", "", "", "", "", "", ""};
-        int[] dicCategoriesNum = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-        String[] diccionariSubcategories = {"", "", "", "", "", "", "", "", "", ""};
-        int[] diccionariPreus = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-        int[] diccionariUnitats = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+        int[][] dadesLlibres = new int[5][10]; //DEFINIM L'ARRAY BIDIMENSIONAL
 
-        int index = 0; //AQUESTA VARIABLE ENS SERVEIX PER RECORRER ELS ARRAYS DELS LLIBRES
+        int[] numLlibresPerCategoria = new int[4];
+
+        //OMPLIM L'ARRAY DE -1
+        for (int i = 0; i < dadesLlibres.length; i++) {
+            for (int j = 0; j < dadesLlibres[i].length; j++) {
+                dadesLlibres[i][j] = -1;
+            }
+        }
+
+        int indexLlibreActual = 0; //AQUESTA VARIABLE ENS SERVEIX PER RECORRER ELS ARRAYS DELS LLIBRES
 
         //DEFINIM DIVERSES VARIABLES
-        int codiLlibre = 0, numCategoria = 0, numSubcategoria = 0, preu = 0, unitatsVenudes = 0, registresIntroduits = 1, respostaRegistre;
+        int codiLlibre = 0, numCategoria = 0, numSubcategoria = 0, preu = 0, unitatsVenudes = 0, respostaRegistre;
 
         //AQUESTES VARIABLES ENS SERVIRAN PER DESPRÉS MOSTRAR EL RESUM ESTADÍSTIC DE LES DADES
         int llibresCat_0 = 0, llibresCat_1 = 0, llibresCat_2 = 0, llibresCat_3 = 0;
@@ -63,7 +84,6 @@ public class P2_CastellsP {
         //DEFINIM ELS VALORS BOOL QUE ENS SERVIRAN PER ENTRAR I SORTIR DELS BUCLES I VALIDAR DADES
         boolean respostaValida = false;
         boolean calIntroduir = true;
-        boolean registreAdicional = true;
 
         //BUCLE PRINCIPAL QUE S'EXECUTA MENTES ES VULGUIN INTRODUIR DADES DE LLIBRES
         while (calIntroduir) {
@@ -71,10 +91,10 @@ public class P2_CastellsP {
             boolean intentsEsgotats = false;
             int intents = 0;
 
-            //LOOP DE VALIDACIÓ DE DADES PELS CODIS DELS LLIBRES
+            //BUCLE DE VALIDACIÓ DE DADES PELS CODIS DELS LLIBRES
+            System.out.println("Codi llibre?: ");
             while (!respostaValida && !intentsEsgotats) {
 
-                System.out.println("Codi llibre?: ");
                 codiLlibre = scanner.nextInt();
 
                 if (codiLlibre < 100 || codiLlibre > 999) {
@@ -85,7 +105,7 @@ public class P2_CastellsP {
                     }
                 } else {
                     respostaValida = true;
-                    diccionariCodis[index] = codiLlibre; //GUARDEM EL CODI DEL LLIBRE AL NOSTRE DICCIONARI
+                    dadesLlibres[INDEX_CODI][indexLlibreActual] = codiLlibre; //GUARDEM EL CODI DEL LLIBRE AL NOSTRE DICCIONARI
                 }
 
             }
@@ -105,15 +125,28 @@ public class P2_CastellsP {
 
                 numCategoria = scanner.nextInt();
 
-                if (numCategoria < 0 || numCategoria > 3) {
+                if (numCategoria < 0 || numCategoria > catSubcat[INDEX_CATEGORIES_TITOLS].length - 1) {
                     System.out.println("Error en la categoria del llibre, no compleix paràmetres. Introdueix de nou: ");
                     intents++;
                     if (intents == INTENTS_MAX) {
                         intentsEsgotats = true;
                     }
                 } else {
+                    switch (numCategoria) {
+                        case 0:
+                            llibresCat_0++;
+                            break;
+                        case 1:
+                            llibresCat_1++;
+                            break;
+                        case 2:
+                            llibresCat_2++;
+                            break;
+                        case 3:
+                            llibresCat_3++;
+                    }
                     respostaValida = true;
-                    dicCategoriesNum[index] = numCategoria;
+                    dadesLlibres[INDEX_CATEGORIA][indexLlibreActual] = numCategoria;
                 }
 
             }
@@ -122,156 +155,37 @@ public class P2_CastellsP {
 
 
             if (!intentsEsgotats) {
-                switch (numCategoria) {
-                    case 0:
-                        llibresCat_0++;
-                        categoriaSeleccionada = CATEGORIA_0;
-                        System.out.println("Subcategoria de " + CATEGORIA_0 + "?: ");
-                        System.out.println("    " + SUBCATEGORIA_EDU_0 + " (0)");
-                        System.out.println("    " + SUBCATEGORIA_EDU_1 + " (1)");
-                        System.out.println("    " + SUBCATEGORIA_EDU_2 + " (2)");
-                        numSubcategoria = scanner.nextInt();
 
-
-                        while (!respostaValida && !intentsEsgotats) {
-
-                            if (numSubcategoria < 0 || numSubcategoria > 3) {
-                                System.out.println("Error en la subcategoria del llibre, no compleix paràmetres. Introdueix de nou: ");
-                                intents++;
-                                if (intents == INTENTS_MAX) {
-                                    intentsEsgotats = true;
-                                }
-                            } else {
-                                respostaValida = true;
-                                switch (numSubcategoria) {
-                                    case 0:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_EDU_0;
-                                        break;
-                                    case 1:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_EDU_1;
-                                        break;
-                                    case 2:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_EDU_2;
-                                        break;
-                                }
-                                System.out.println(subcategoriaSeleccionada);
-                                diccionariSubcategories[index] = subcategoriaSeleccionada;
-                                diccionariCategories[index] = categoriaSeleccionada;
-                            }
-
-                        }
-                        break;
-
-                    case 1:
-                        llibresCat_1++;
-                        categoriaSeleccionada = CATEGORIA_1;
-                        System.out.println("Subcategoria de " + CATEGORIA_1 + "?: ");
-                        System.out.println("    " + SUBCATEGORIA_OCI_0 + " (0)");
-                        System.out.println("    " + SUBCATEGORIA_OCI_1 + " (1)");
-                        System.out.println("    " + SUBCATEGORIA_OCI_2 + " (2)");
-                        numSubcategoria = scanner.nextInt();
-                        while (!respostaValida && !intentsEsgotats) {
-
-                            if (numSubcategoria < 0 || numSubcategoria > 3) {
-                                System.out.println("Error en la subcategoria del llibre, no compleix paràmetres. Introdueix de nou: ");
-                                intents++;
-                                if (intents == INTENTS_MAX) {
-                                    intentsEsgotats = true;
-                                }
-                            } else {
-                                respostaValida = true;
-                                switch (numSubcategoria) {
-                                    case 0:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_OCI_0;
-                                        break;
-                                    case 1:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_OCI_1;
-                                        break;
-                                    case 2:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_OCI_2;
-                                        break;
-                                }
-                                System.out.println(subcategoriaSeleccionada);
-                                diccionariSubcategories[index] = subcategoriaSeleccionada;
-                                diccionariCategories[index] = categoriaSeleccionada;
-                            }
-
-                        }
-                        break;
-
-                    case 2:
-                        llibresCat_2++;
-                        categoriaSeleccionada = CATEGORIA_2;
-                        System.out.println("Subcategoria de " + CATEGORIA_2 + "?: ");
-                        System.out.println("    " + SUBCATEGORIA_NOVELA_0 + " (0)");
-                        System.out.println("    " + SUBCATEGORIA_NOVELA_1 + " (1)");
-                        System.out.println("    " + SUBCATEGORIA_NOVELA_2 + " (2)");
-                        numSubcategoria = scanner.nextInt();
-                        while (!respostaValida && !intentsEsgotats) {
-
-                            if (numSubcategoria < 0 || numSubcategoria > 3) {
-                                System.out.println("Error en la subcategoria del llibre, no compleix paràmetres. Introdueix de nou: ");
-                                intents++;
-                                if (intents == INTENTS_MAX) {
-                                    intentsEsgotats = true;
-                                }
-                            } else {
-                                respostaValida = true;
-                                switch (numSubcategoria) {
-                                    case 0:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_NOVELA_0;
-                                        break;
-                                    case 1:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_NOVELA_1;
-                                        break;
-                                    case 2:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_NOVELA_2;
-                                        break;
-                                }
-                                System.out.println(subcategoriaSeleccionada);
-                                diccionariSubcategories[index] = subcategoriaSeleccionada;
-                                diccionariCategories[index] = categoriaSeleccionada;
-                            }
-
-                        }
-                        break;
-
-                    case 3:
-                        llibresCat_3++;
-                        categoriaSeleccionada = CATEGORIA_3;
-                        System.out.println("Subcategoria de " + CATEGORIA_3 + "?: ");
-                        System.out.println("    " + SUBCATEGORIA_SALUT_0 + " (0)");
-                        System.out.println("    " + SUBCATEGORIA_SALUT_1 + " (1)");
-                        System.out.println("    " + SUBCATEGORIA_SALUT_2 + " (2)");
-                        numSubcategoria = scanner.nextInt();
-                        while (!respostaValida && !intentsEsgotats) {
-
-                            if (numSubcategoria < 0 || numSubcategoria > 3) {
-                                System.out.println("Error en la subcategoria del llibre, no compleix paràmetres. Introdueix de nou: ");
-                                intents++;
-                                if (intents == INTENTS_MAX) {
-                                    intentsEsgotats = true;
-                                }
-                            } else {
-                                respostaValida = true;
-                                switch (numSubcategoria) {
-                                    case 0:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_SALUT_0;
-                                        break;
-                                    case 1:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_SALUT_1;
-                                        break;
-                                    case 2:
-                                        subcategoriaSeleccionada = SUBCATEGORIA_SALUT_2;
-                                        break;
-                                }
-                                diccionariSubcategories[index] = subcategoriaSeleccionada;
-                                diccionariCategories[index] = categoriaSeleccionada;
-                            }
-
-                        }
-                        break;
+                numLlibresPerCategoria[numCategoria]++;
+                categoriaSeleccionada = catSubcat[INDEX_CATEGORIES_TITOLS][numCategoria];
+                System.out.println("Subcategoria de " + categoriaSeleccionada + "?: ");
+                for (int i = 0; i < catSubcat[numCategoria + 1].length; i++) {
+                    System.out.println("    " + catSubcat[numCategoria + 1][i] + " (" + i + ") ");
                 }
+                numSubcategoria = scanner.nextInt();
+
+
+                while (!respostaValida && !intentsEsgotats) {
+
+                    if (numSubcategoria < 0 || numSubcategoria > catSubcat[numCategoria + 1].length - 1) {
+                        intents++;
+                        if (intents == INTENTS_MAX) {
+                            intentsEsgotats = true;
+                        } else {
+                            System.out.println("Error en la subcategoria del llibre, no compleix paràmetres. Introdueix de nou: ");
+                            numSubcategoria = scanner.nextInt();
+                        }
+                    } else {
+                        respostaValida = true;
+
+                        dadesLlibres[INDEX_SUBCATEGORIA][indexLlibreActual] = numSubcategoria;
+
+                        System.out.println(subcategoriaSeleccionada);
+
+                    }
+
+                }
+
 
             }
             respostaValida = false;
@@ -289,7 +203,7 @@ public class P2_CastellsP {
                     }
                 } else {
                     respostaValida = true;
-                    diccionariPreus[index] = preu;
+                    dadesLlibres[INDEX_PREU][indexLlibreActual] = preu;
                 }
 
             }
@@ -309,26 +223,43 @@ public class P2_CastellsP {
                     }
                 } else {
                     respostaValida = true;
-                    diccionariUnitats[index] = unitatsVenudes;
+                    dadesLlibres[INDEX_UNITATS][indexLlibreActual] = unitatsVenudes;
                 }
 
             }
             respostaValida = false;
-            intents = 0;
+            //si el llibre introduit te un error eliminem les dades introduides d'aquell llibre
+            if (intentsEsgotats) {
+                for (int i = 0; i < dadesLlibres.length; i++) {
+                    dadesLlibres[i][indexLlibreActual] = -1;
+                }
+            } else {
+                for (int i = 0; i <= indexLlibreActual; i++) {
+                    int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
+                    int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
+                    System.out.println("codi: " + dadesLlibres[INDEX_CODI][i] +
+                            " categoria: " + catSubcat[INDEX_CATEGORIES_TITOLS][categoriaLlibreNum] +
+                            " subcategoria: " + catSubcat[categoriaLlibreNum + 1][subcategoriaLlibreNum] +
+                            " preu " + dadesLlibres[INDEX_PREU][i] +
+                            " unitats: " + dadesLlibres[INDEX_UNITATS][i]);
+                }
+            }
 
-            System.out.println("Codi: " + codiLlibre + " || Categoria: " + categoriaSeleccionada + " || Subcategoria: " + subcategoriaSeleccionada + " || Preu: " + preu + " || Unitats: " + unitatsVenudes);
             System.out.println("Vol introduïr un altre registre? SI (1) NO (2)");
             respostaRegistre = scanner.nextInt();
             if (respostaRegistre == 1) {
-                registresIntroduits++;
-                index++;
+                indexLlibreActual++;
 
             } else {
-                System.out.println("S'han introduït " + registresIntroduits + " registres de llibres");
-                index = 0;
-                while (diccionariCodis[index] != -1) {
-                    System.out.println("codi: " + diccionariCodis[index] + " categoria: " + diccionariCategories[index] + " subcategoria: " + diccionariSubcategories[index] + " preu " + diccionariPreus[index] + " unitats: " + diccionariUnitats[index]);
-                    index++;
+                System.out.println("S'han introduït " + indexLlibreActual + 1 + " registres de llibres");
+                for (int i = 0; i <= indexLlibreActual; i++) {
+                    int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
+                    int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
+                    System.out.println("codi: " + dadesLlibres[INDEX_CODI][i] +
+                            " categoria: " + catSubcat[INDEX_CATEGORIES_TITOLS][categoriaLlibreNum] +
+                            " subcategoria: " + catSubcat[categoriaLlibreNum + 1][subcategoriaLlibreNum] +
+                            " preu " + dadesLlibres[INDEX_PREU][i] +
+                            " unitats: " + dadesLlibres[INDEX_UNITATS][i]);
                 }
                 calIntroduir = false;
 
@@ -337,51 +268,61 @@ public class P2_CastellsP {
         }
 
         int catConsultada = 0;
-        int arraySize = 4;
-
 
         System.out.println("Vol consultar per categoria? (SI (1) NO (2))");
         int volConsultar = scanner.nextInt();
         if (volConsultar == 1) {
-            index = 0;
             System.out.println("Quina categoria? ");
             System.out.println("    Educació i formació (0)");
             System.out.println("    Oci i temps lliure (1)");
             System.out.println("    Novel·la (2)");
             System.out.println("    Salut i benestar (3)");
             catConsultada = scanner.nextInt();
-            System.out.println("Codi" + "   Categoria   " + "  Subcategoria   " + "   Preu   " + "   Unitats   ");
+            for (int i = 0; i <= indexLlibreActual; i++) {
+                int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
+                int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
+                System.out.println("codi: " + dadesLlibres[INDEX_CODI][i] +
+                        " categoria: " + catSubcat[INDEX_CATEGORIES_TITOLS][categoriaLlibreNum] +
+                        " subcategoria: " + catSubcat[categoriaLlibreNum + 1][subcategoriaLlibreNum] +
+                        " preu " + dadesLlibres[INDEX_PREU][i] +
+                        " unitats: " + dadesLlibres[INDEX_UNITATS][i]);
+            }
 
+            for (int k = 0; k <= indexLlibreActual; k++) {
+                for (int l = k + 1; l < indexLlibreActual; l++) {
+                    if (dadesLlibres[INDEX_CODI][k] > dadesLlibres[INDEX_CODI][l]) {
+                        int canvi = dadesLlibres[INDEX_CODI][k];
+                        dadesLlibres[INDEX_CODI][k] = dadesLlibres[INDEX_CODI][l];
+                        dadesLlibres[INDEX_CODI][l] = canvi;
 
-            for (int k = 0; k < arraySize; k++) {
-                for (int l = k + 1; l < arraySize; l++) {
-                    if (diccionariCodis[k] > diccionariCodis[l]) {
-                        int canvi = diccionariCodis[k];
-                        diccionariCodis[k] = diccionariCodis[l];
-                        diccionariCodis[l] = canvi;
+                        int canviCategoria = dadesLlibres[INDEX_CATEGORIA][k];
+                        dadesLlibres[INDEX_CATEGORIA][k] = dadesLlibres[INDEX_CATEGORIA][l];
+                        dadesLlibres[INDEX_CATEGORIA][l] = canviCategoria;
 
-                        int canviCategoria = dicCategoriesNum[k];
-                        dicCategoriesNum[k] = dicCategoriesNum[l];
-                        dicCategoriesNum[l] = canviCategoria;
+                        int canviSubCategoria = dadesLlibres[INDEX_SUBCATEGORIA][k];
+                        dadesLlibres[INDEX_SUBCATEGORIA][k] = dadesLlibres[INDEX_SUBCATEGORIA][l];
+                        dadesLlibres[INDEX_SUBCATEGORIA][l] = canviSubCategoria;
 
-                        String canviSubCategoria = diccionariSubcategories[k];
-                        diccionariSubcategories[k] = diccionariSubcategories[l];
-                        diccionariSubcategories[l] = canviSubCategoria;
+                        int canviPreu = dadesLlibres[INDEX_PREU][k];
+                        dadesLlibres[INDEX_PREU][k] = dadesLlibres[INDEX_PREU][l];
+                        dadesLlibres[INDEX_PREU][l] = canviPreu;
 
-                        int canviPreu = diccionariPreus[k];
-                        diccionariPreus[k] = diccionariPreus[l];
-                        diccionariPreus[l] = canviPreu;
-
-                        int canviUnitats = diccionariUnitats[k];
-                        diccionariUnitats[k] = diccionariUnitats[l];
-                        diccionariUnitats[l] = canviUnitats;
+                        int canviUnitats = dadesLlibres[INDEX_UNITATS][k];
+                        dadesLlibres[INDEX_UNITATS][k] = dadesLlibres[INDEX_UNITATS][l];
+                        dadesLlibres[INDEX_UNITATS][l] = canviUnitats;
                     }
                 }
             }
 
-            for (int i = 0; i < arraySize; i++) {
-                if (dicCategoriesNum[i] == catConsultada) {
-                    System.out.println(diccionariCodis[i] + "   " + diccionariCategories[i] + "   " + diccionariSubcategories[i] + "   " + diccionariPreus[i] + "   " + diccionariUnitats[i]);
+            for (int i = 0; i < indexLlibreActual; i++) {
+                if (dadesLlibres[INDEX_CATEGORIA][i] == catConsultada) {
+                    int categoriaLlibreNum = dadesLlibres[INDEX_CATEGORIA][i];
+                    int subcategoriaLlibreNum = dadesLlibres[INDEX_SUBCATEGORIA][i];
+                    System.out.println("codi: " + dadesLlibres[INDEX_CODI][i] +
+                            " categoria: " + catSubcat[INDEX_CATEGORIES_TITOLS][categoriaLlibreNum] +
+                            " subcategoria: " + catSubcat[categoriaLlibreNum + 1][subcategoriaLlibreNum] +
+                            " preu " + dadesLlibres[INDEX_PREU][i] +
+                            " unitats: " + dadesLlibres[INDEX_UNITATS][i]);
                 }
             }
 
@@ -391,7 +332,7 @@ public class P2_CastellsP {
         System.out.println("Vol veure un resum estadístic de les dades? (SI (1) NO (2)");
         int respostaResum = scanner.nextInt();
         if (respostaResum == 1) {
-            System.out.println("Número de llibres introduïts: " + registresIntroduits);
+            System.out.println("Número de llibres introduïts: " + indexLlibreActual);
             System.out.println("Número de llibres per categoria: ");
             System.out.println("    Educació i formació: " + llibresCat_0);
             System.out.println("    Oci i temps lliure: " + llibresCat_1);
