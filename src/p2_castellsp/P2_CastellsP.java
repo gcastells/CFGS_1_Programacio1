@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package p2_castellsp;
 
 /**
@@ -51,7 +47,7 @@ public class P2_CastellsP {
 
     private static final int INDEX_CATEGORIES_TITOLS = 0;
 
-
+    private static final double IVA = 0.04;
     private static final int INTENTS_MAX = 3;
 
     public static void main(String[] args) {
@@ -71,6 +67,7 @@ public class P2_CastellsP {
 
         //AQUESTES VARIABLES ENS SERVIRAN PER DESPRÉS MOSTRAR EL RESUM ESTADÍSTIC DE LES DADES
         int llibresCat_0 = 0, llibresCat_1 = 0, llibresCat_2 = 0, llibresCat_3 = 0;
+        double guanysTotals = 0;
 
         String categoriaSeleccionada = "", subcategoriaSeleccionada = "";
 
@@ -232,6 +229,18 @@ public class P2_CastellsP {
                             " subcategoria: " + catSubcat[categoriaLlibreNum + 1][subcategoriaLlibreNum] +
                             " preu " + dadesLlibres[INDEX_PREU][i] +
                             " unitats: " + dadesLlibres[INDEX_UNITATS][i]);
+                    // Calcular guanys bruts per llibre
+                    double guanysBruts = preu * unitatsVenudes;
+                    System.out.println("Guanys Bruts: " + guanysBruts + " euros");
+
+                    // Calcular IVA corresponent
+                    double iva = guanysBruts * IVA;
+                    System.out.println("IVA (" + (IVA * 100) + "%): " + iva + " euros");
+
+                    // Guanys bruts
+                    guanysTotals += guanysBruts;
+
+
                 }
             }
 
@@ -304,30 +313,29 @@ public class P2_CastellsP {
                             " subcategoria: " + catSubcat[categoriaLlibreNum + 1][subcategoriaLlibreNum] +
                             " preu " + dadesLlibres[INDEX_PREU][i] +
                             " unitats: " + dadesLlibres[INDEX_UNITATS][i]);
+
                 }
             }
-
-
         }
+        // Calcular guanys bruts per llibre
+        double guanysBruts = preu * unitatsVenudes;
+        System.out.println("Guanys Bruts: " + guanysBruts + " euros");
+
 
         System.out.println("Vol veure un resum estadístic de les dades? (SI (1) NO (2)");
         int respostaResum = scanner.nextInt();
         if (respostaResum == 1) {
-            System.out.println("Número de llibres introduïts: " + indexLlibreActual);
+            System.out.println("Número de llibres introduïts: " + (indexLlibreActual+1));
             System.out.println("Número de llibres per categoria: ");
             System.out.println("    Educació i formació: " + llibresCat_0);
             System.out.println("    Oci i temps lliure: " + llibresCat_1);
             System.out.println("    Novel·la: " + llibresCat_2);
             System.out.println("    Salut i benestar: " + llibresCat_3);
+
+            System.out.println("Ingresos totals: " + guanysTotals + " euros");
+            double ivaTotal = guanysTotals * IVA;
+            System.out.println("IVA total (" + (IVA * 100) + "%): " + ivaTotal + " euros");
         }
-
-
     }
-
-
 }
-
-
-
-    
 
